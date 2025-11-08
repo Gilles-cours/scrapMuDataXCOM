@@ -2,9 +2,36 @@
 
 Ce projet contient des scripts pour récupérer les coefficients d'absorption massique (µ/rho) et les coefficients d'absorption d'énergie massique (µen/rho) pour tous les éléments chimiques (Z=1 à Z=92).
 
-## Solution Recommandée: xraydb (✓ Fonctionne)
+## ⚠️ PROBLÈME IDENTIFIÉ
 
-Le script **`get_nist_data_xraydb.py`** utilise la bibliothèque Python `xraydb` qui contient les données NIST/XCOM.
+Les données générées par `get_nist_data_xraydb.py` sont **INCORRECTES**. Par exemple, pour Fe à 1 MeV:
+- Valeur NIST correcte: **5.99E-2 cm²/g**
+- Valeur xraydb générée: **8.87E+3 cm²/g** (erreur facteur ~150,000!)
+
+Le site NIST bloque également toutes les requêtes automatiques (erreur 403).
+
+## Solutions Disponibles
+
+### Solution 1: Téléchargement Manuel + Parsing (RECOMMANDÉ)
+
+**Avantages**: Données 100% correctes, aucune interpolation
+
+1. **Télécharger manuellement** les fichiers depuis le site NIST
+   - Consultez `GUIDE_TELECHARGEMENT_MANUEL.md` pour les instructions détaillées
+   - URL: https://physics.nist.gov/PhysRefData/XrayMassCoef/tab4.html
+
+2. **Parser les fichiers** téléchargés:
+   ```bash
+   python parse_nist_files.py
+   ```
+
+### Solution 2: Selenium (Automatique mais complexe)
+
+Si vous avez Chrome/Chromium + ChromeDriver installés:
+```bash
+python download_with_selenium.py
+python parse_nist_files.py
+```
 
 ### Installation
 
